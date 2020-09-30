@@ -1,9 +1,0 @@
-.form {
-  display: flex;
-  flex-direction: column;
-}
-
-.number,
-.btns {
-  margin-top: 15px;
-}
