@@ -1,10 +1,11 @@
 // task DOM
+let container = document.querySelector('.dom-task');
 let table = document.createElement('table');
-let colorTableChanged = false;
-let rowQty = prompt('Row quantity:');
-let cellQty = prompt('Cell quantity:');
+let btn = document.createElement('button');
+let rowQty = prompt('Row quantity:') || 10;
+let cellQty = prompt('Cell quantity:') || 10;
 
-const renderTable = () => {
+const renderLayout = () => {
   for (let i = 1; i <= rowQty; i++) {
     const row = document.createElement('tr');
     table.append(row);
@@ -17,21 +18,24 @@ const renderTable = () => {
       row.append(cell);
     }
   }
-  let btn = document.createElement('button');
-  btn.textContent = 'Change color';
-  btn.onclick = changeColorBtn;
-  let container = document.querySelector('.dom-task');
-  container.append(table, btn);
+  container.append(table, renderBtn());
   table.onclick = changeColorCell;
 };
 
+const renderBtn = () => {
+  btn.textContent = 'Change color';
+  btn.onclick = changeColorBtn;
+  return btn;
+};
+
 const changeColorBtn = () => {
-  console.log(colorTableChanged, '///colorTableChanged before');
-  colorTableChanged
-    ? (table.style.backgroundColor = '#000')
-    : (table.style.backgroundColor = '#fff');
-  colorTableChanged = !colorTableChanged;
-  console.log(colorTableChanged, '///colorTableChanged after');
+  Array.from(table.children).forEach((tr) => {
+    for (let td of tr.children) {
+      td.style.backgroundColor == 'rgb(0, 0, 0)'
+        ? (td.style.backgroundColor = '#fff')
+        : (td.style.backgroundColor = '#000');
+    }
+  });
 };
 
 const changeColorCell = (e) => {
@@ -45,141 +49,169 @@ addAttributes = (cell, attrs) => {
   cell.style.border = '1px solid #000';
 };
 
-renderTable();
+renderLayout();
 
-// task18 binarySearch
-const getResultTask18 = (arr, n) => {
-  let first = 0;
-  let last = arr.length - 1;
-  let position = -1;
-  let middle;
-  let found = false;
-
-  while (first <= last && found === false) {
-    middle = Math.floor((first + last) / 2);
-    if (arr[middle] == n) {
-      found = true;
-      position = middle;
-    }
-    if (arr[middle] > n) {
-      last = middle - 1;
-    }
-    if (arr[middle] < n) {
-      first = middle + 1;
-    }
-  }
-  return position;
+// task22 unique values of 2 arrays
+const getResultTask22 = (arr1, arr2) => {
+  const uniqValuesArr1 = getUniqNumbers(arr1);
+  const uniqValuesArr2 = getUniqNumbers(arr2);
+  const unionArrays = uniqValuesArr1.concat(uniqValuesArr2);
+  return Array.from(new Set(unionArrays));
 };
 
-console.log(getResultTask18([1, 2, 3, 7], 7));
+const getUniqNumbers = (arr) => {
+  return Array.from(new Set(arr));
+};
 
-// task19 sum of arrays
-const getResultTask19 = (arr1, arr2) => {
-  if (arr1.length === arr2.length) {
-    return sumQualArrays(arr1, arr2);
-  }
-  if (arr1.length != arr2.length) {
-    const longestArr = arr1.length > arr2.length ? arr1 : arr2;
-    const shortestArr = arr1.length < arr2.length ? arr1 : arr2;
-    const longestArrCut = longestArr.slice(0, shortestArr.length);
-    const tail = longestArr.slice(shortestArr.length);
-    const sum = sumQualArrays(shortestArr, longestArrCut);
-    return sum.concat(tail);
+console.log(getResultTask22([1, 2, 3, 7, 3, 10, 10], [4, 9, 10]));
+
+// task23 difference of 2 arrays
+const getResultTask23 = (arr1, arr2) => {
+  return filterArray(arr1, arr2).concat(filterArray(arr2, arr1));
+};
+
+const filterArray = (arr1, arr2) => {
+  let newArray = arr1.filter((elem) => {
+    if (!arr2.includes(elem)) {
+      return elem;
+    }
+  });
+  return newArray;
+};
+
+console.log(getResultTask23([1, 2, 3], [100, 2, 1, 10]));
+
+// task24 difference of 2 arrays
+const getResultTask24 = (arr, ...values) => {
+  for (let index in arr) {
+    if (arr.includes(values[index])) {
+      let deleteIndex = arr.indexOf(values[index]);
+      arr.splice(deleteIndex, 1);
+      return arr;
+    }
   }
 };
-const sumQualArrays = (arr1, arr2) => {
-  return arr1.map((elem, index) => {
-    return elem + arr2[index];
+
+console.log(
+  getResultTask24(
+    [1, 2, 3, 'null'],
+    'null',
+    '0',
+    '',
+    'false',
+    'undefined',
+    'NaN'
+  )
+);
+
+// task26 difference of 2 arrays
+const getResultTask26 = (arr, n) => {
+  for (let index in arr) {
+    if (arr[index] + arr[Number(index) + 1] == n) {
+      let index2 = Number(index) + 1;
+      return `${index}, ${index2}`;
+    }
+  }
+};
+
+console.log(getResultTask26([10, 20, 10, 40, 50, 60, 70], 50));
+
+// task27
+const getResultTask27 = (arr) => {
+  return arr.filter((elem) => {
+    return elem > 0 || elem < 0;
   });
 };
 
-console.log(getResultTask19([1, 0, 2, 3, 4], [3, 5, 6, 7, 8, 13]));
-console.log(getResultTask19([1, 6], [2, 3]));
+console.log(getResultTask27([NaN, 0, 15, false, -22, '', undefined, 47, null]));
 
-// task20 duplicates in array
-const getResultTask20 = (arr) => {
-  let obj = {};
-  for (let elem of arr) {
-    Object.keys(obj).includes(String(elem))
-      ? (obj[elem] += 1)
-      : (obj[elem] = 1);
-  }
-  return findDuplicates(obj);
+// task28 longest common starting substring
+const getResultTask28 = (arr) => {
+  const [first] = arr;
+  const [, second] = arr;
+  return second.includes(first) ? first : 'not found';
 };
 
-const findDuplicates = (obj) => {
+console.log(getResultTask28(['go', 'google']));
+
+// task31
+const getResultTask31 = (arr, n) => {
+  return arr.filter((elem) => {
+    return elem != n;
+  });
+};
+
+console.log(getResultTask31([2, 5, 9, 6], 5));
+
+// task32
+const getResultTask32 = (arr, n) => {
+  return arr.some((elem) => {
+    return elem == n;
+  }); // аналог include
+};
+
+console.log(getResultTask32([2, 5, 9, 6], 5));
+
+// task33
+const getResultTask33 = (arr) => {
+  // arr.splice(0, arr.length);
+  // return arr; ////variant1
+  // arr.length = 0;
+  // return arr; ////variant2
+  while (arr.length) {
+    arr.pop();
+  }
+  return arr;
+};
+
+console.log(getResultTask33([2, 5, 9, 6]));
+
+// task36
+const getResultTask36 = (qty, n) => {
   let result = [];
-  for (let key in obj) {
-    if (obj[key] >= 2) {
-      result.push(key);
-    }
+  for (let i = 0; i < qty; i++) {
+    result.push(n);
   }
   return result;
 };
 
-console.log(getResultTask20([1, 0, 2, 3, 2, 4, 4]));
+console.log(getResultTask36(6, 0));
 
-// 4 link of tasks
-// task1 factorial
-const getResultTask1 = (n) => {
-  if (n <= 1) {
-    return n;
-  }
-  return n * getResultTask1(n - 1);
+// task39
+const getResultTask39 = (arr) => {
+  let elemToRemove = ['', false, null, 0]; //почему если массив будет [false, null, 0, ''], то пустая строчка не удалается, он до нее не доходит
+  let filteredArr = arr.filter((elem, index) => {
+    console.log(elemToRemove[index], 'elem from elemToRemove'); //здесь нет пустой строчки, если ее поставить последним элементом в elemToRemove
+    if (arr.includes(elemToRemove[index])) {
+      return elem != elemToRemove[index];
+    }
+  });
+  return filteredArr;
 };
+console.log(getResultTask39([58, '', 'abcd', true, null, false, 0]));
 
-console.log(getResultTask1(5));
-console.log(getResultTask1(0));
-
-// task3 numbers between start and end
-const getResultTask3 = (start, end) => {
+// task40
+const getResultTask40 = (start, len) => {
   let res = [];
-  for (let i = start + 1; i < end; i++) {
+  let i = start;
+  while (res.length < len) {
     res.push(i);
+    i++;
   }
   return res;
 };
 
-console.log(getResultTask3(2, 5));
+console.log(getResultTask40(-1, 6));
 
-// task4 numbers between start and end
-const getResultTask4 = (arr) => {
-  let sum = 0;
-  arr.forEach((elem) => {
-    return (sum += elem);
-  });
-  return sum;
-};
-
-console.log(getResultTask4([1, 2, 3, 4, 5, 6])); //21
-
-// task6 fibonacci
-const getResultTask6 = (n) => {
-  if (n <= 1) {
-    return [0, 1];
-  } else {
-    const res = getResultTask6(n - 1) + getResultTask6(n - 2);
-    return res.split(',');
+// task41
+const getResultTask41 = (start, end) => {
+  let result = [];
+  let i = start;
+  while (i <= end) {
+    result.push(i);
+    i++;
   }
+  return result;
 };
 
-console.log(getResultTask6(2));
-console.log(getResultTask6(1));
-
-// task7 even or not
-const getResultTask7 = (n) => {
-  return n % 2 != 0;
-};
-
-console.log(getResultTask7(2));
-console.log(getResultTask7(1));
-
-// task8 sort
-const getResultTask8 = (arr) => {
-  arr.sort((a, b) => {
-    return a - b;
-  });
-  return arr;
-};
-
-console.log(getResultTask8([34, 7, 23, 32, 5, 62]), '//res1');
+console.log(getResultTask41(-1, 5));
