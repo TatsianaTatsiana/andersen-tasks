@@ -1,0 +1,45 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+}
+.container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 5%;
+}
+
+.cell {
+  background-color: #4996c9;
+  width: 28px;
+  height: 28px;
+  z-index: 2;
+}
+
+.snake {
+  background-color: #862f66;
+  z-index: 2;
+  transition: background-color 0.2s;
+}
+
+.food {
+  background-color: #fda601;
+  z-index: 2;
+  transition: background-color 1s;
+}
+
+.btns {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3%;
+  width: 15%;
+}
+
+.start,
+.reset {
+  border-radius: 10px;
+  padding: 10px;
+  font-weight: 800;
+  outline: none;
+}
